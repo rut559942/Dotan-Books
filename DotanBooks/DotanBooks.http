@@ -1,0 +1,6 @@
+@DotanBooks_HostAddress = http://localhost:5180
+
+GET {{DotanBooks_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

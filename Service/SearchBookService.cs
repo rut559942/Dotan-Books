@@ -1,0 +1,55 @@
+﻿using DTOs;
+using Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Service
+{
+  public  class SearchBookService:ISearchBookService
+    {
+        private readonly ISearchBookRepository _repository;
+
+        public SearchBookService(ISearchBookRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<IEnumerable<BookAutocompleteDto>> GetAutocompleteAsync(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 2) return new List<BookAutocompleteDto>();
+
+            var books = await _repository.GetSuggestionsAsync(term, 10);
+
+            return books.Select(b => new BookAutocompleteDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                AuthorName = b.Author.Name
+            });
+        }
+
+        public async Task<PagedResult<BookListDto>> GetFullSearchAsync(string term, int page, int pageSize)
+        {
+            var (items, totalCount) = await _repository.SearchBooksAsync(term, page, pageSize);
+
+            return new PagedResult<BookListDto>
+            {
+                TotalCount = totalCount,
+                Items = items.Select(b => new BookListDto
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    AuthorName = b.Author.Name,
+                    Price = b.Price,
+                    ImageUrl = b.ImageUrl,
+                    CategoryName = b.Category.Name
+                })
+            };
+        }
+
+    }
+}
