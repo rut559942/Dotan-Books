@@ -1,0 +1,37 @@
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build folders
+bin/
+obj/
+
+## Rider
+.idea/
+
+## DotNet
+*.db
+*.db-shm
+*.db-wal
+*.pdb
+*.dll
+*.exe
+*.class
+
+## NuGet
+*.nupkg
+packages/
+
+## OS generated
+Thumbs.db
+*.DS_Store
+
+## Logs
+*.log
+
+## Publish
+publish/
+*.publishsettings
