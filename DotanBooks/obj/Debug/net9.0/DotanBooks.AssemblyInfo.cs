@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DotanBooks")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fed35b7bd3306c77b49b52f41f818ddc5de4bd75")]
 [assembly: System.Reflection.AssemblyProductAttribute("DotanBooks")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DotanBooks")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

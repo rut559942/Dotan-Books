@@ -24,11 +24,12 @@ namespace Service
 
             var books = await _repository.GetSuggestionsAsync(term, 10);
 
-            return books.Select(b => new BookAutocompleteDto
+            return books.Select(static b => new BookAutocompleteDto
             {
                 Id = b.Id,
                 Title = b.Title,
-                AuthorName = b.Author.Name
+                Summary = b.Summary,
+                ImageUrl = b.ImageUrl
             });
         }
 
