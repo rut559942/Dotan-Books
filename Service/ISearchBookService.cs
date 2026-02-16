@@ -10,6 +10,6 @@ namespace Service
    public interface ISearchBookService
     {
         Task<IEnumerable<BookAutocompleteDto>> GetAutocompleteAsync(string term);
-        Task<PagedResult<BookListDto>> GetFullSearchAsync(string term, int page, int pageSize);
+        Task<PagedResponse<BookListDto>> GetFullSearchAsync(string term, int page, int pageSize);
     }
 }

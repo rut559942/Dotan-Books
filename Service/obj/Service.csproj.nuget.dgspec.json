@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "M:\\Dotan-Books\\Service\\Service.csproj": {}
+    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Service\\Service.csproj": {}
   },
   "projects": {
-    "M:\\Dotan-Books\\DTOs\\DTOs.csproj": {
+    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "M:\\Dotan-Books\\DTOs\\DTOs.csproj",
+        "projectUniqueName": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "M:\\Dotan-Books\\DTOs\\DTOs.csproj",
-        "packagesPath": "C:\\Users\\330682782\\.nuget\\packages\\",
-        "outputPath": "M:\\Dotan-Books\\DTOs\\obj\\",
+        "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj",
+        "packagesPath": "C:\\Users\\aliza.twito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\330682782\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\aliza.twito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,8 +33,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "M:\\Dotan-Books\\Entitiys\\Entities.csproj": {
-                "projectPath": "M:\\Dotan-Books\\Entitiys\\Entities.csproj"
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj"
               }
             }
           }
@@ -49,7 +49,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -76,24 +76,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "M:\\Dotan-Books\\Entitiys\\Entities.csproj": {
+    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "M:\\Dotan-Books\\Entitiys\\Entities.csproj",
+        "projectUniqueName": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "M:\\Dotan-Books\\Entitiys\\Entities.csproj",
-        "packagesPath": "C:\\Users\\330682782\\.nuget\\packages\\",
-        "outputPath": "M:\\Dotan-Books\\Entitiys\\obj\\",
+        "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj",
+        "packagesPath": "C:\\Users\\aliza.twito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\330682782\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\aliza.twito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -121,7 +121,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -142,24 +142,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "M:\\Dotan-Books\\Repository\\Repository.csproj": {
+    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "M:\\Dotan-Books\\Repository\\Repository.csproj",
+        "projectUniqueName": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj",
         "projectName": "Repository",
-        "projectPath": "M:\\Dotan-Books\\Repository\\Repository.csproj",
-        "packagesPath": "C:\\Users\\330682782\\.nuget\\packages\\",
-        "outputPath": "M:\\Dotan-Books\\Repository\\obj\\",
+        "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj",
+        "packagesPath": "C:\\Users\\aliza.twito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\330682782\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\aliza.twito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -175,8 +175,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "M:\\Dotan-Books\\Entitiys\\Entities.csproj": {
-                "projectPath": "M:\\Dotan-Books\\Entitiys\\Entities.csproj"
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj"
+              },
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj"
               }
             }
           }
@@ -191,7 +194,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -222,24 +225,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "M:\\Dotan-Books\\Service\\Service.csproj": {
+    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Service\\Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "M:\\Dotan-Books\\Service\\Service.csproj",
+        "projectUniqueName": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Service\\Service.csproj",
         "projectName": "Service",
-        "projectPath": "M:\\Dotan-Books\\Service\\Service.csproj",
-        "packagesPath": "C:\\Users\\330682782\\.nuget\\packages\\",
-        "outputPath": "M:\\Dotan-Books\\Service\\obj\\",
+        "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Service\\Service.csproj",
+        "packagesPath": "C:\\Users\\aliza.twito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\330682782\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\aliza.twito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -255,14 +258,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "M:\\Dotan-Books\\DTOs\\DTOs.csproj": {
-                "projectPath": "M:\\Dotan-Books\\DTOs\\DTOs.csproj"
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\DTOs\\DTOs.csproj"
               },
-              "M:\\Dotan-Books\\Entitiys\\Entities.csproj": {
-                "projectPath": "M:\\Dotan-Books\\Entitiys\\Entities.csproj"
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj"
               },
-              "M:\\Dotan-Books\\Repository\\Repository.csproj": {
-                "projectPath": "M:\\Dotan-Books\\Repository\\Repository.csproj"
+              "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj": {
+                "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj"
               }
             }
           }
@@ -277,7 +280,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -304,7 +307,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

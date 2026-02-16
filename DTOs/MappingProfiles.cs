@@ -23,6 +23,10 @@ namespace DTOs
             
             CreateMap<OrderCreateDto, Order>();
             CreateMap<OrderItemDto, OrderItem>();
+            CreateMap<Book, BookListDto>()
+                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
+            CreateMap(typeof(PagedResponse<>), typeof(PagedResponse<>));
+            CreateMap(typeof(CategoryBooksResult<>), typeof(CategoryBooksResult<>));
         }
     }
 }

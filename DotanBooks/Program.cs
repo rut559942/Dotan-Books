@@ -4,8 +4,15 @@ using Repository;
 using AutoMapper;
 using DTOs;
 using Microsoft.Extensions.DependencyInjection;
+using Service;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IGetByCategoriesService, GetByCategoriesService>();
+builder.Services.AddScoped<IGetByCategoriesRepository, GetByCategoriesRepository>();
+
+
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

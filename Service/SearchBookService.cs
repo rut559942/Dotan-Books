@@ -33,11 +33,11 @@ namespace Service
             });
         }
 
-        public async Task<PagedResult<BookListDto>> GetFullSearchAsync(string term, int page, int pageSize)
+        public async Task<PagedResponse<BookListDto>> GetFullSearchAsync(string term, int page, int pageSize)
         {
             var (items, totalCount) = await _repository.SearchBooksAsync(term, page, pageSize);
 
-            return new PagedResult<BookListDto>
+            return new PagedResponse<BookListDto>
             {
                 TotalCount = totalCount,
                 Items = items.Select(b => new BookListDto
