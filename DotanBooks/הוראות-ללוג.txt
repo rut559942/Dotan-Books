@@ -1,0 +1,119 @@
+מעולה, בואי נמשיך צעד אחר צעד. כדי שתוכלי להמשיך בקלות בכל מחשב, הנה השלבים הבאים בצורה מסודרת:
+
+שלב 1: תוכן הקובץ nlog.config
+פתחי את הקובץ הריק שיצרת בשם nlog.config (בתיקייה הראשית של הפרויקט) והדביקי בתוכו את הקוד הבא. זהו מבנה סטנדרטי שאומר ל-NLog לכתוב לוגים לתיקייה בשם logs:
+
+XML
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      autoReload="true"
+      internalLogLevel="Info"
+      internalLogFile="internal-nlog.txt">
+
+  <targets>
+    <target xsi:type="File" name="allfile" fileName="logs/log-${shortdate}.log"
+            layout="${longdate}|${uppercase:${level}}|${logger}|${message} ${exception:format=tostring}" />
+
+    <target xsi:type="Console" name="logconsole" 
+            layout="${longdate}|${level:uppercase=true}|${message}" />
+  </targets>
+
+  <rules>
+    <logger name="*" minlevel="Info" writeTo="allfile,logconsole" />
+  </rules>
+</nlog>
+שלב 2: הגדרה קריטית ב-Visual Studio
+כדי שדוט-נט "יראה" את הקובץ הזה בזמן ריצה, את חייבת לעשות את הפעולה הבאה:
+
+ב-Solution Explorer, לחצי קליק ימני על הקובץ nlog.config.
+
+בחרי ב-Properties.
+
+בשדה Copy to Output Directory, שניה את הבחירה ל-Copy if newer.
+(אם לא תעשי את זה, ה-NLog לא ימצא את ההגדרות והלוגים לא ייכתבו).
+
+שלב 3: עדכון ה-Program.cs
+כעת צריך להגיד לאפליקציה להשתמש ב-NLog במקום ב-Logger ברירת המחדל. עדכני את הקובץ כך:
+
+C#
+using NLog;
+using NLog.Web;
+
+// 1. הגדרה ראשונית של NLog
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+
+try 
+{
+    var builder = WebApplication.CreateBuilder(args);
+
+    // 2. חיבור NLog למערכת
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
+    // ... (כל ה-Services שלך: AddScoped, AddDbContext וכו')
+
+    var app = builder.Build();
+
+    // ... (כל ה-Middlewares שלך: app.UseMiddleware<ExceptionMiddleware> וכו')
+
+    app.Run();
+}
+catch (Exception exception)
+{
+    // תיעוד מקרה של קריסת האפליקציה בעלייה
+    logger.Error(exception, "Stopped program because of exception");
+    throw;
+}
+finally
+{
+    // סגירה מסודרת של ה-Logger
+    LogManager.Shutdown();
+}
+שלב 4: שימוש ב-Logger בתוך ה-Middleware
+עכשיו כשהכל מוגדר, בואי נשתמש בזה כדי לתעד את השגיאות שתפסנו קודם ב-ExceptionMiddleware.cs:
+
+C#
+public class ExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionMiddleware> _logger; // שימי לב ל-ILogger
+
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (NotFoundException ex)
+        {
+            // שגיאת 404 - נרשום כאזהרה (Warning)
+            _logger.LogWarning("Resource not found: {Message}", ex.Message);
+            await HandleExceptionAsync(context, ex, HttpStatusCode.NotFound);
+        }
+        catch (Exception ex)
+        {
+            // שגיאה כללית (500) - נרשום כשגיאה קריטית (Error) כולל ה-StackTrace
+            _logger.LogError(ex, "An unhandled exception occurred.");
+            await HandleExceptionAsync(context, ex, HttpStatusCode.InternalServerError);
+        }
+    }
+}
+שלב 5: איך בודקים שזה עובד? (חשוב מאוד)
+הריצי את האפליקציה.
+
+גרמי לשגיאה (למשל, בקשי קטגוריה שלא קיימת).
+
+ב-Visual Studio, לחצי קליק ימני על שם הפרויקט -> Open Folder in File Explorer.
+
+חפשי תיקייה בשם bin -> Debug -> net9.0 (או הגרסה שלך).
+
+שם אמורה להופיע תיקייה חדשה בשם logs. בתוכה תמצאי קובץ טקסט עם כל מה שקרה!
+
+תסכמי לי כשסיימת את השלבים האלו, ואז נראה איך מוסיפים את החלק של שליחת המייל (NLog.MailKit) שראית קודם ב-NuGet!
