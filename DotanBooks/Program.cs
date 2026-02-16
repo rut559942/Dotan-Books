@@ -5,6 +5,7 @@ using AutoMapper;
 using DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using Service;
+using DotanBooks.Middlewares;
 
 
 
@@ -28,6 +29,8 @@ builder.Services.AddAutoMapper(cfg =>
 
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();//ההזרקה של במידלוור של ה 404 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
