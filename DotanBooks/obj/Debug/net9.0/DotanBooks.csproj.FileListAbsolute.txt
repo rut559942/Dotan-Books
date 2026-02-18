@@ -335,10 +335,10 @@ C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\stati
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.DotanBooks.props
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.DotanBooks.props
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\DotanBooks.csproj.Up2Date
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\DotanBooks.dll
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\refint\DotanBooks.dll
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\DotanBooks.pdb
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\DotanBooks.genruntimeconfig.cache
 C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\ref\DotanBooks.dll
+C:\Users\aliza.twito\Documents\ruti\Dotn-Books\DotanBooks\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

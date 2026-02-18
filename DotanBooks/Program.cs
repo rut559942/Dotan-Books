@@ -20,6 +20,8 @@ try
 
     builder.Services.AddScoped<IGetByCategoriesService, GetByCategoriesService>();
     builder.Services.AddScoped<IGetByCategoriesRepository, GetByCategoriesRepository>();
+    builder.Services.AddScoped<ISearchBookService, SearchBookService>();
+    builder.Services.AddScoped<ISearchBookRepository, SearchBookRepository>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
@@ -41,7 +43,7 @@ try
         options.AddPolicy("AllowAngular",
             policy =>
             {
-                policy.WithOrigins("http://localhost:4200")
+                policy.WithOrigins("http://localhost:53769")
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
