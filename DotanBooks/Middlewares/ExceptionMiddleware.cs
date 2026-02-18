@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using DotanBooks.Exceptions;
+using Utils.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
@@ -10,11 +10,13 @@ namespace DotanBooks.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IHostEnvironment _env;
+        private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
+        public ExceptionMiddleware(RequestDelegate next, IHostEnvironment env, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _env = env;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -26,11 +28,13 @@ namespace DotanBooks.Middlewares
             }
             catch (NotFoundException ex)
             {
+                _logger.LogWarning("Resource not found: {Message}", ex.Message);
                 // טיפול ספציפי בשגיאת 404 שזרקנו מהסרביס
                 await HandleExceptionAsync(context, ex, HttpStatusCode.NotFound);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An unhandled exception occurred.");
                 // טיפול בשגיאות לא צפויות (500)
                 await HandleExceptionAsync(context, ex, HttpStatusCode.InternalServerError);
             }
@@ -44,7 +48,6 @@ namespace DotanBooks.Middlewares
             var response = new
             {
                 StatusCode = context.Response.StatusCode,
-                Message = exception.Message,
                 // הצגת פרטים טכניים רק בסביבת פיתוח
                 Message = _env.IsDevelopment() ? exception.Message : "Resource not found",
                 Detailed = _env.IsDevelopment() ? exception.StackTrace : null

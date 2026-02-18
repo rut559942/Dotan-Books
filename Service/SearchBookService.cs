@@ -46,8 +46,7 @@ namespace Service
                     Title = b.Title,
                     AuthorName = b.Author.Name,
                     Price = b.Price,
-                    ImageUrl = b.ImageUrl,
-                    CategoryName = b.Category.Name
+                    ImageUrl = b.ImageUrl
                 })
             };
         }

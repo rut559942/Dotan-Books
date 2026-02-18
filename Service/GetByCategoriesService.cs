@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DTOs;
 using Repository;
-using DotanBooks.Exceptions;
+using Utils.Exceptions;
 
 namespace Service
 {
@@ -27,7 +27,7 @@ namespace Service
             var result = await _repository.GetAllBooks(CategoryId, pageSize, page);
 
             if (result == null)
-                    throw new NotFoundException($"Category with ID {categoryId} was not found.");
+                    throw new NotFoundException($"Category with ID {CategoryId} was not found.");
                     
                        
             return _mapper.Map<CategoryBooksResult<BookListDto>>(result);

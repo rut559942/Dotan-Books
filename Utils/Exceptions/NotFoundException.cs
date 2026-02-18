@@ -1,6 +1,6 @@
 using System;
 
-namespace DotanBooks.Exceptions
+namespace Utils.Exceptions
 {
     public class NotFoundException : Exception
     {

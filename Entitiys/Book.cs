@@ -14,7 +14,7 @@ namespace Entities
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
         public int StockQuantity { get; set; }
-        public bool IsBestSeller { get; set; }
+        public bool IsHardPages { get; set; }
 
         
         public int AuthorId { get; set; }

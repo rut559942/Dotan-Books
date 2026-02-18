@@ -1001,6 +1001,16 @@
         "runtime": {
           "bin/placeholder/Repository.dll": {}
         }
+      },
+      "Utils/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Utils.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Utils.dll": {}
+        }
       }
     }
   },
@@ -2608,6 +2618,11 @@
       "type": "project",
       "path": "../Repository/Repository.csproj",
       "msbuildProject": "../Repository/Repository.csproj"
+    },
+    "Utils/1.0.0": {
+      "type": "project",
+      "path": "../Utils/Utils.csproj",
+      "msbuildProject": "../Utils/Utils.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -2615,7 +2630,8 @@
       "DTOs >= 1.0.0",
       "Entities >= 1.0.0",
       "Repository >= 1.0.0",
-      "System.Linq.Dynamic.Core >= 1.7.1"
+      "System.Linq.Dynamic.Core >= 1.7.1",
+      "Utils >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2659,6 +2675,9 @@
             },
             "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj": {
               "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Repository\\Repository.csproj"
+            },
+            "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Utils\\Utils.csproj": {
+              "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Utils\\Utils.csproj"
             }
           }
         }

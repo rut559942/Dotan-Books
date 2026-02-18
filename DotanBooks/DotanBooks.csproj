@@ -16,13 +16,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NLog.MailKit" Version="6.0.5" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
-    <ProjectReference Include="..\Entitiys\Entities.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Service\Service.csproj" />
+    <ProjectReference Include="..\Utils\Utils.csproj" />
   </ItemGroup>
 
 </Project>

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
     <ProjectReference Include="..\Entitiys\Entities.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
+    <ProjectReference Include="..\Utils\Utils.csproj" />
   </ItemGroup>
 
 </Project>

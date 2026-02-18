@@ -11,9 +11,9 @@ namespace DotanBooks.Controllers
     {
         private readonly ISearchBookService _searchBookService;
 
-        public SearchBooksController(ISearchBookService _searchBookService)
+        public SearchBooksController(ISearchBookService searchBookService)
         {
-            _searchBookService = _searchBookService;
+            _searchBookService = searchBookService;
         }
 
         [HttpGet("autocomplete")]
