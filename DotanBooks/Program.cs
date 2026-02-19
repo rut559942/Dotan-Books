@@ -20,6 +20,8 @@ try
 
     builder.Services.AddScoped<IGetByCategoriesService, GetByCategoriesService>();
     builder.Services.AddScoped<IGetByCategoriesRepository, GetByCategoriesRepository>();
+    builder.Services.AddScoped<ISearchBookService, SearchBookService>();
+    builder.Services.AddScoped<ISearchBookRepository, SearchBookRepository>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
@@ -52,14 +54,19 @@ try
     var app = builder.Build();
 
     app.UseMiddleware<ExceptionMiddleware>();//ההזרקה של במידלוור של ה 404 
-
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    
+if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        ServeUnknownFileTypes = true
+    });
 
     app.UseCors("AllowAngular");
 

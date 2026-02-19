@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {}
+    "C:\\Users\\User\\Documents\\Dotan-Books-Server\\Entitiys\\Entities.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj": {
+    "C:\\Users\\User\\Documents\\Dotan-Books-Server\\Entitiys\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Documents\\Dotan-Books-Server\\Entitiys\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\Entities.csproj",
-        "packagesPath": "C:\\Users\\aliza.twito\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aliza.twito\\Documents\\ruti\\Dotn-Books\\Entitiys\\obj\\",
+        "projectPath": "C:\\Users\\User\\Documents\\Dotan-Books-Server\\Entitiys\\Entities.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Documents\\Dotan-Books-Server\\Entitiys\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\aliza.twito\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -45,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -66,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
