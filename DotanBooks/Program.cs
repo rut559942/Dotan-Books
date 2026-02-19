@@ -43,7 +43,7 @@ try
         options.AddPolicy("AllowAngular",
             policy =>
             {
-                policy.WithOrigins("http://localhost:53769")
+                policy.WithOrigins("http://localhost:53958")
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
