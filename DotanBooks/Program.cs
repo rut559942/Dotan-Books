@@ -22,7 +22,8 @@ try
     builder.Services.AddScoped<IGetByCategoriesRepository, GetByCategoriesRepository>();
     builder.Services.AddScoped<ISearchBookService, SearchBookService>();
     builder.Services.AddScoped<ISearchBookRepository, SearchBookRepository>();
-
+    builder.Services.AddScoped<IBookByIdService, BookByIdService>();
+    builder.Services.AddScoped<IBookByIdRepository, BookByIdRepository>();
 
     builder.Services.AddDbContext<StoreContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

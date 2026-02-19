@@ -12,7 +12,8 @@ namespace DTOs
         public string? Title { get; set; }
         public string? Summary { get; set; }
         public decimal Price { get; set; }
-        public string? ImageUrl { get; set; }
+        public string? ImageUrl { get; set;}
+        public bool? IsHardPages { get; set; }
         public string? AuthorName { get; set; } 
         public string? CategoryName { get; set; } 
         public string? PromotionTitle { get; set; }

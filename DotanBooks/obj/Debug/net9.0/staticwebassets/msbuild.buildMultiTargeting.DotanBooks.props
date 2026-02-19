@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\DotanBooks.props" />
-</Project>
