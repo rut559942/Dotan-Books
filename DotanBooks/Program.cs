@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using AutoMapper;
@@ -22,7 +21,12 @@ try
     builder.Services.AddScoped<IGetByCategoriesRepository, GetByCategoriesRepository>();
     builder.Services.AddScoped<ISearchBookService, SearchBookService>();
     builder.Services.AddScoped<ISearchBookRepository, SearchBookRepository>();
+    builder.Services.AddScoped<IBookByIdService, BookByIdService>();
+    builder.Services.AddScoped<IBookByIdRepository, BookByIdRepository>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+ 
 
     builder.Services.AddDbContext<StoreContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,7 +47,7 @@ try
         options.AddPolicy("AllowAngular",
             policy =>
             {
-                policy.WithOrigins("http://localhost:53958")
+                policy.WithOrigins("http://localhost:4200")
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
@@ -54,14 +58,19 @@ try
     var app = builder.Build();
 
     app.UseMiddleware<ExceptionMiddleware>();//ההזרקה של במידלוור של ה 404 
+                                             // Configure the HTTP request pipeline.
 
-    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        ServeUnknownFileTypes = true
+    });
 
     app.UseCors("AllowAngular");
 
@@ -71,7 +80,7 @@ try
 
     app.Run();
 }
-catch(Exception exception)
+catch (Exception exception)
 {
     logger.Error(exception, "Stopped program because of exception");
     throw;
