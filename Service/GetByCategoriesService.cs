@@ -22,7 +22,7 @@ namespace Service
             _mapper=mapper;
         }
 
-        public async Task<CategoryBooksResult<BookListDto>> GetAllBook(int CategoryId, int pageSize, int page)
+        public async Task<CategoryBooksResult<BookListDto>> GetAllBook(int CategoryId, int page, int pageSize)
         {
             var result = await _repository.GetAllBooks(CategoryId, pageSize, page);
 
