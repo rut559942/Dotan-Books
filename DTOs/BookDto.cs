@@ -14,6 +14,7 @@ namespace DTOs
         public decimal Price { get; set; }
         public string? ImageUrl { get; set;}
         public bool? IsHardPages { get; set; }
+        public int StockQuantity { get; set; }
         public string? AuthorName { get; set; } 
         public string? CategoryName { get; set; } 
         public string? PromotionTitle { get; set; }

@@ -21,6 +21,7 @@ namespace Repository
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         // 2. עיצוב המודל (Fluent API)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,6 +43,23 @@ namespace Repository
             // יצירת אינדקס על שם הספר לחיפוש מהיר יותר
             modelBuilder.Entity<Book>()
                 .HasIndex(b => b.Title);
+
+            // הגדרת אימייל ייחודי ללקוחות
+            modelBuilder.Entity<Customer>()
+                .HasIndex(c => c.Email)
+                .IsUnique();
+
+            // הגדרת קשר "אחד לרבים" בין לקוח להזמנות
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // הגדרת דיוק למחירים בהזמנות
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

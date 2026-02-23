@@ -11,11 +11,10 @@ namespace Entities
         public int Id { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public decimal TotalAmount { get; set; }
-        public string CustomerName { get; set; } = string.Empty;
-        public string CustomerEmail { get; set; } = string.Empty;
-
+        public int CustomerId { get; set; }
+        
+        public virtual Customer Customer { get; set; } = null!;
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 
-    
 }
