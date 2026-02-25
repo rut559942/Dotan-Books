@@ -48,7 +48,8 @@ namespace Service
             var user = await _repository.GetUserByEmail(loginDto.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
-                  throw new ValidationException("Invalid email or password.");
+                  
+                throw new ValidationException("Invalid email or password.");
             
 
             // 3. מיפוי ל-CustomerDto (כדי לא להחזיר את הסיסמה המוצפנת ללקוח)

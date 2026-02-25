@@ -21,9 +21,14 @@ namespace Repository
                 .Include(b => b.Author)
                 .Include(b => b.Category)
                 .Include(b => b.Promotion)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == bookId);
             return book;
+        }
+
+        public async Task UpdateBook(Book book)
+        {
+            _context.Books.Update(book);
+            await _context.SaveChangesAsync();
         }
     }
 }

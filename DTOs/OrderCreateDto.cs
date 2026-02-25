@@ -3,19 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTOs
 {
     public class OrderCreateDto
     {
-        public string? CustomerName { get; set; }
-        public string? CustomerEmail{ get; set; }
-        public List<OrderItemDto>? Items { get; set; }
+        [Required(ErrorMessage = "חובה להזין כתובת למשלוח")]
+        public string ShippingAddress { get; set; } = string.Empty;
+
+        [Range(1, int.MaxValue, ErrorMessage = "עיר לא תקינה")]
+        public int ShippingCityId { get; set; }
+
+        [Required(ErrorMessage = "חובה להוסיף מוצרים להזמנה")]
+        [MinLength(1, ErrorMessage = "הסל ריק")]
+        public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
+
+        [MaxLength(500, ErrorMessage = "הערות הלקוח ארוכות מדי")]
+        public string? CustomerNotes { get; set; }
     }
 
     public class OrderItemDto
     {
         public int BookId { get; set; }
+
+        [Range(1, 100, ErrorMessage = "כמות חייבת להיות בין 1 ל-100")]
         public int Quantity { get; set; }
     }
 }

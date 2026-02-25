@@ -7,9 +7,8 @@ using Entities;
 
 namespace Repository
 {
-    public interface IBookByIdRepository
+    public interface IOrderRepository
     {
-        Task<Book?> GetBookById(int bookId);
-        Task UpdateBook(Book book);
+        Task<Order> CreateOrderAsync(Order order);
     }
 }

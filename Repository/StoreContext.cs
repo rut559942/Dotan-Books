@@ -9,7 +9,7 @@ using Entities;
 
 namespace Repository
 {
-    
+
     public class StoreContext : DbContext
     {
         public StoreContext(DbContextOptions<StoreContext> options) : base(options) { }
@@ -27,6 +27,10 @@ namespace Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.OrderNumber)
+                .HasComputedColumnSql("'DS' + CAST([Id] + 465500 AS VARCHAR(20))", stored: true);
 
             // הגדרת דיוק למחירים - קריטי בחנות!
             modelBuilder.Entity<Book>()
