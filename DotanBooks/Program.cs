@@ -7,6 +7,9 @@ using Service;
 using DotanBooks.Middlewares;
 using NLog;
 using NLog.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 try
@@ -25,8 +28,10 @@ try
     builder.Services.AddScoped<IBookByIdRepository, BookByIdRepository>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
     builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
 
- 
+
 
     builder.Services.AddDbContext<StoreContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -53,7 +58,27 @@ try
             });
     });
 
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            ClockSkew = TimeSpan.Zero // מבטל את הדיליי המובנה של 5 דקות פקיעת תוקף
+        };
+    });
 
     var app = builder.Build();
 
@@ -67,12 +92,15 @@ try
 
     app.UseHttpsRedirection();
 
+
     app.UseStaticFiles(new StaticFileOptions
     {
         ServeUnknownFileTypes = true
     });
 
     app.UseCors("AllowAngular");
+
+    app.UseAuthentication();
 
     app.UseAuthorization();
 

@@ -27,6 +27,11 @@ namespace DTOs
                  .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name));
             CreateMap(typeof(PagedResponse<>), typeof(PagedResponse<>));
             CreateMap(typeof(CategoryBooksResult<>), typeof(CategoryBooksResult<>));
+            CreateMap<NewUserDto, Customer>();
+            CreateMap<Customer, CustomerDto>();
+            CreateMap<Customer, LoginDto>();
+            CreateMap<UpdateUserDto, Customer>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore()); // מניעת דריסה של ה-ID
         }
     }
 }

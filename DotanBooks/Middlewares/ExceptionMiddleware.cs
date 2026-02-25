@@ -32,6 +32,11 @@ namespace DotanBooks.Middlewares
                 // טיפול ספציפי בשגיאת 404 שזרקנו מהסרביס
                 await HandleExceptionAsync(context, ex, HttpStatusCode.NotFound);
             }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning("Validation failed: {Message}", ex.Message);
+                await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unhandled exception occurred.");
