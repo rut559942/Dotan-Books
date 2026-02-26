@@ -13,11 +13,19 @@ namespace Service
     {
         private readonly Repository.IOrderRepository _orderRepository;
         private readonly IBookByIdRepository _bookRepository;
+        private readonly IEmailService _emailService;
+        private readonly IUserRepository _userRepository;
 
-        public OrderService(Repository.IOrderRepository orderRepository, IBookByIdRepository bookRepository)
+        public OrderService(
+            Repository.IOrderRepository orderRepository,
+            IBookByIdRepository bookRepository,
+            IEmailService emailService,
+            IUserRepository userRepository)
         {
             _orderRepository = orderRepository;
             _bookRepository = bookRepository;
+            _emailService = emailService;
+            _userRepository = userRepository;
         }
 
         public async Task<string> PlaceOrderAsync(OrderCreateDto dto, int customerId)
@@ -60,6 +68,20 @@ namespace Service
 
             if (savedOrder.OrderNumber == null)
                 throw new Exception("שגיאה ביצירת מספר הזמנה");
+
+            var user = await _userRepository.GetUserById(customerId);
+            string emailBody = $@"
+               <h3>שלום,</h3>
+               <p>הזמנתך שמספרה <b>{savedOrder.OrderNumber}</b> התקבלה בהצלחה!</p>
+               <p>תודה שבחרת בדותן ספרים.</p>
+               <p>בשביל הזמנה אמיתית, היכנס לקישור הבא:<br/>
+               <a href='https://www.dotansfarim.co.il'>www.dotansfarim.co.il</a></p>";
+            if (user != null && !string.IsNullOrEmpty(user.Email))
+
+            {
+                await _emailService.SendEmailAsync(user.Email, "אישור הזמנה - דוטן ספרים", emailBody);
+
+            }
 
             return savedOrder.OrderNumber;
         }
@@ -114,4 +136,3 @@ namespace Service
         }
     }
 }
-

@@ -38,6 +38,7 @@ try
     builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
     builder.Services.AddScoped<IManagementBookService, ManagementBookService>();
     builder.Services.AddScoped<IManagementBookRepository, ManagementBookRepository>();
+    builder.Services.AddScoped<IEmailService, EmailService>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
