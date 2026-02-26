@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using DotanBooks.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -29,20 +30,44 @@ namespace DotanBooks.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] UpdateOrCreateBookDto dto)
+        public async Task<IActionResult> CreateBook([FromForm] ManagementBookUpsertRequest request)
         {
-            if (dto == null) throw new ValidationException("נתוני הספר אינם תקינים");
+            if (request == null) throw new ValidationException("נתוני הספר אינם תקינים");
 
-            await _bookService.CreateBookAsync(dto);
+            var dto = new UpdateOrCreateBookDto
+            {
+                Title = request.Title,
+                Summary = request.Summary,
+                Price = request.Price,
+                StockQuantity = request.StockQuantity,
+                IsHardPages = request.IsHardPages,
+                AuthorId = request.AuthorId,
+                CategoryId = request.CategoryId,
+                PromotionId = request.PromotionId
+            };
+
+            await _bookService.CreateBookAsync(dto, request.ImageFile);
             return Ok(new { message = "הספר נוסף בהצלחה למערכת" });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] UpdateOrCreateBookDto dto)
+        public async Task<IActionResult> UpdateBook(int id, [FromForm] ManagementBookUpsertRequest request)
         {
-            if (dto == null) throw new ValidationException("נתוני הספר אינם תקינים");
+            if (request == null) throw new ValidationException("נתוני הספר אינם תקינים");
 
-            await _bookService.UpdateBookAsync(id, dto);
+            var dto = new UpdateOrCreateBookDto
+            {
+                Title = request.Title,
+                Summary = request.Summary,
+                Price = request.Price,
+                StockQuantity = request.StockQuantity,
+                IsHardPages = request.IsHardPages,
+                AuthorId = request.AuthorId,
+                CategoryId = request.CategoryId,
+                PromotionId = request.PromotionId
+            };
+
+            await _bookService.UpdateBookAsync(id, dto, request.ImageFile);
             return Ok(new { message = "פרטי הספר עודכנו בהצלחה" });
         }
 
