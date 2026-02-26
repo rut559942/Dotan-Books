@@ -32,6 +32,12 @@ try
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IOrderService, OrderService>();
     builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+    builder.Services.AddScoped<IPromotionService, PromotionService>();
+    builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+    builder.Services.AddScoped<IAuthorService, AuthorService>();
+    builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+    builder.Services.AddScoped<IManagementBookService, ManagementBookService>();
+    builder.Services.AddScoped<IManagementBookRepository, ManagementBookRepository>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
