@@ -10,6 +10,6 @@ namespace Repository
 {
     public interface IGetByCategoriesRepository
     {
-        Task<CategoryBooksResult<Book>> GetAllBooks(int CategoryId, int pageSize, int page);
+        Task<CategoryBooksResult<Book>?> GetAllBooks(int categoryId, int pageSize, int page);
     }
 }

@@ -24,7 +24,7 @@ namespace DotanBooks.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreatePromotionDto>> Create([FromBody] CreatePromotionDto promotion)
+        public async Task<ActionResult<PromotionDto>> Create([FromBody] CreatePromotionDto promotion)
         {
             var newPromo = await _promotionService.CreatePromotionAsync(promotion);
             return CreatedAtAction(nameof(GetAll), new { id = newPromo.Id }, newPromo);

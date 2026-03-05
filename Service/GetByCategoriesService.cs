@@ -22,12 +22,12 @@ namespace Service
             _mapper=mapper;
         }
 
-        public async Task<CategoryBooksResult<BookListDto>> GetAllBook(int CategoryId, int page, int pageSize)
+        public async Task<CategoryBooksResult<BookListDto>> GetAllBook(int categoryId, int page, int pageSize)
         {
-            var result = await _repository.GetAllBooks(CategoryId, pageSize, page);
+            var result = await _repository.GetAllBooks(categoryId, pageSize, page);
 
             if (result == null)
-                    throw new NotFoundException($"Category with ID {CategoryId} was not found.");
+                throw new NotFoundException($"Category with ID {categoryId} was not found.");
                     
                        
             return _mapper.Map<CategoryBooksResult<BookListDto>>(result);

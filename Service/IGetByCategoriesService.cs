@@ -9,7 +9,7 @@ namespace Service
 {
     public interface IGetByCategoriesService
     {
-        Task<CategoryBooksResult<BookListDto>> GetAllBook(int CategoryId, int pageSize, int page);
+        Task<CategoryBooksResult<BookListDto>> GetAllBook(int categoryId, int page, int pageSize);
 
     }
 }

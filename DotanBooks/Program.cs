@@ -39,6 +39,8 @@ try
     builder.Services.AddScoped<IManagementBookService, ManagementBookService>();
     builder.Services.AddScoped<IManagementBookRepository, ManagementBookRepository>();
     builder.Services.AddScoped<IEmailService, EmailService>();
+    builder.Services.AddScoped<IRatingService, RatingService>();
+    builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
@@ -49,10 +51,8 @@ try
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
-    builder.Services.AddAutoMapper(cfg =>
-    {
-        cfg.AddProfile<MappingProfiles>();
-    });
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddAutoMapper(_ => { }, typeof(MappingProfiles).Assembly);
 
     //חיבור ל client
     builder.Services.AddCors(options =>
@@ -67,7 +67,8 @@ try
     });
 
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+    var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("Jwt:Key is missing from configuration.");
+    var key = Encoding.ASCII.GetBytes(jwtKey);
 
     builder.Services.AddAuthentication(options =>
     {
@@ -90,12 +91,15 @@ try
 
     var app = builder.Build();
 
+    app.UseMiddleware<RatingMiddleware>();
     app.UseMiddleware<ExceptionMiddleware>();//ההזרקה של במידלוור של ה 404 
                                              // Configure the HTTP request pipeline.
 
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
+        app.UseSwagger(); 
+        app.UseSwaggerUI(); 
     }
 
     app.UseHttpsRedirection();
@@ -107,6 +111,8 @@ try
     });
 
     app.UseCors("AllowAngular");
+
+    app.UseMiddleware<BlockedUserMiddleware>();
 
     app.UseAuthentication();
 

@@ -37,6 +37,21 @@ namespace DotanBooks.Middlewares
                 _logger.LogWarning("Validation failed: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest);
             }
+            catch (UnprocessableEntityException ex)
+            {
+                _logger.LogWarning("Business rule violation: {Message}", ex.Message);
+                await HandleExceptionAsync(context, ex, HttpStatusCode.UnprocessableEntity);
+            }
+            catch (ForbiddenException ex)
+            {
+                _logger.LogWarning("Access forbidden: {Message}", ex.Message);
+                await HandleExceptionAsync(context, ex, HttpStatusCode.Forbidden);
+            }
+            catch (ConflictException ex)
+            {
+                _logger.LogWarning("Resource conflict: {Message}", ex.Message);
+                await HandleExceptionAsync(context, ex, HttpStatusCode.Conflict);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unhandled exception occurred.");
@@ -54,13 +69,27 @@ namespace DotanBooks.Middlewares
             {
                 StatusCode = context.Response.StatusCode,
                 // הצגת פרטים טכניים רק בסביבת פיתוח
-                Message = _env.IsDevelopment() ? exception.Message : "Resource not found",
+                Message = _env.IsDevelopment() ? exception.Message : GetProductionMessage(statusCode),
                 Detailed = _env.IsDevelopment() ? exception.StackTrace : null
     
             };
 
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             return context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
+        }
+
+        private static string GetProductionMessage(HttpStatusCode statusCode)
+        {
+            return statusCode switch
+            {
+                HttpStatusCode.BadRequest => "הבקשה לא תקינה. בדקו את הנתונים ונסו שוב.",
+                HttpStatusCode.Unauthorized => "נדרש להתחבר למערכת.",
+                HttpStatusCode.Forbidden => "אין הרשאה לבצע את הפעולה הזו.",
+                HttpStatusCode.NotFound => "המשאב המבוקש לא נמצא.",
+                HttpStatusCode.Conflict => "לא ניתן להשלים את הפעולה בגלל התנגשות בנתונים.",
+                HttpStatusCode.UnprocessableEntity => "לא ניתן להשלים את הפעולה בגלל כלל עסקי.",
+                _ => "אירעה שגיאה בלתי צפויה. נסו שוב מאוחר יותר."
+            };
         }
     }
 }

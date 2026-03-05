@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-   public class BookAutocompleteDto
+    public record BookAutocompleteDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-   public class BookListDto
+    public record BookListDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;

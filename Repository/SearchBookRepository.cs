@@ -35,7 +35,7 @@ namespace Repository
                 .Include(b => b.Category)
                 .Where(b => b.Title.Contains(term) ||
                             b.Author.Name.Contains(term) ||
-                            b.Summary.Contains(term))
+                            (b.Summary != null && b.Summary.Contains(term)))
                 .AsNoTracking();
 
             var totalCount = await query.CountAsync();

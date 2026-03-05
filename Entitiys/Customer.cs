@@ -14,6 +14,9 @@ namespace Entities
         public string Password { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;  
         public bool IsAdmin { get; set; }
+        public bool IsBlocked { get; set; }
+        public DateTime? BlockedAtUtc { get; set; }
+        public string? BlockReason { get; set; }
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

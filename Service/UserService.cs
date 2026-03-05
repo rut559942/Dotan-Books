@@ -47,6 +47,11 @@ namespace Service
         {
             var user = await _repository.GetUserByEmail(loginDto.Email);
 
+            if (user != null && user.IsBlocked)
+            {
+                throw new ForbiddenException("החשבון חסום לצמיתות עקב ניסיון לשנות מחירים בהזמנה.");
+            }
+
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
                   
                 throw new ValidationException("Invalid email or password.");

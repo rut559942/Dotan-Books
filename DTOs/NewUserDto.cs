@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
     {
-        public class NewUserDto
+        public record NewUserDto
         {
             [Required(ErrorMessage = "Name is required")]
             [StringLength(50, MinimumLength = 2)]

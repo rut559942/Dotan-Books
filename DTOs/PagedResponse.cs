@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-  public  class PagedResponse<T>
+  public  record PagedResponse<T>
     {
         public IEnumerable<T> Items { get; set; } = new List<T>();
         public int TotalCount { get; set; }

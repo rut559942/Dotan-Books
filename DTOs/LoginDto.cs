@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DTOs
 {
-    public class LoginDto
+    public record LoginDto
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]

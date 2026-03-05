@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DTOs
 {
-    public class UpdateUserDto
+    public record UpdateUserDto
     {
         [Required(ErrorMessage = "Name is required")]
         [StringLength(50, MinimumLength = 2)]

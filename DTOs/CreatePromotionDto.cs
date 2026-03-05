@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public class CreatePromotionDto
+    public record CreatePromotionDto
     {
         public string Name { get; set; } = string.Empty;
         public decimal DiscountedPrice { get; set; }

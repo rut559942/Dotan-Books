@@ -9,16 +9,16 @@ namespace DotanBooks.Controllers
     [ApiController]
     public class BookPageController : ControllerBase
     {
-        private readonly IBookByIdService _Service;
+        private readonly IBookByIdService _bookByIdService;
 
-        public BookPageController(IBookByIdService Service)
+        public BookPageController(IBookByIdService bookByIdService)
         {
-            _Service = Service;
+            _bookByIdService = bookByIdService;
         }
         [HttpGet("{bookId}")]
         public async Task<ActionResult<BookDto>> GetBookById(int bookId)
         {
-            var result = await _Service.GetBookById(bookId);
+            var result = await _bookByIdService.GetBookById(bookId);
             if (result == null)
             {
                 return NotFound();

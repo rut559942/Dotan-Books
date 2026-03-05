@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using AutoMapper;
 
 namespace Service
 {
@@ -22,19 +23,22 @@ namespace Service
         private readonly ICategoryService _categoryService;
         private readonly IPromotionService _promotionService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IMapper _mapper;
 
         public ManagementBookService(
             IManagementBookRepository bookRepository,
             IAuthorService authorService,
             ICategoryService categoryService,
             IPromotionService promotionService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IMapper mapper)
         {
             _bookRepository = bookRepository;
             _authorService = authorService;
             _categoryService = categoryService;
             _promotionService = promotionService;
             _webHostEnvironment = webHostEnvironment;
+            _mapper = mapper;
         }
 
         public async Task<ManagementBookDto> GetManagementDataAsync()
@@ -55,20 +59,12 @@ namespace Service
 
         public async Task CreateBookAsync(UpdateOrCreateBookDto dto, IFormFile? imageFile)
         {
+            ValidateBookBusinessRules(dto);
+
             var imageUrl = await SaveImageAsync(imageFile, isRequired: true);
 
-            var book = new Book
-            {
-                Title = dto.Title,
-                Summary = dto.Summary,
-                Price = dto.Price,
-                ImageUrl = imageUrl,
-                StockQuantity = dto.StockQuantity,
-                IsHardPages = dto.IsHardPages,
-                AuthorId = dto.AuthorId,
-                CategoryId = dto.CategoryId,
-                PromotionId = dto.PromotionId
-            };
+            var book = _mapper.Map<Book>(dto);
+            book.ImageUrl = imageUrl;
 
             await _bookRepository.AddAsync(book);
             await _bookRepository.SaveChangesAsync();
@@ -76,6 +72,8 @@ namespace Service
 
         public async Task UpdateBookAsync(int id, UpdateOrCreateBookDto dto, IFormFile? imageFile)
         {
+            ValidateBookBusinessRules(dto);
+
             var book = await _bookRepository.GetByIdAsync(id);
 
             if (book == null)
@@ -83,21 +81,28 @@ namespace Service
                 throw new NotFoundException("הספר לא נמצא במערכת");
             }
 
-            book.Title = dto.Title;
-            book.Summary = dto.Summary;
-            book.Price = dto.Price;
+            _mapper.Map(dto, book);
+
             if (imageFile != null)
             {
                 book.ImageUrl = await SaveImageAsync(imageFile, isRequired: false);
             }
-            book.StockQuantity = dto.StockQuantity;
-            book.IsHardPages = dto.IsHardPages;
-            book.AuthorId = dto.AuthorId;
-            book.CategoryId = dto.CategoryId;
-            book.PromotionId = dto.PromotionId;
 
             await _bookRepository.UpdateAsync(book);
             await _bookRepository.SaveChangesAsync();
+        }
+
+        private static void ValidateBookBusinessRules(UpdateOrCreateBookDto dto)
+        {
+            if (dto.Price <= 0)
+            {
+                throw new UnprocessableEntityException("מחיר הספר חייב להיות גדול מ-0");
+            }
+
+            if (dto.StockQuantity < 0)
+            {
+                throw new UnprocessableEntityException("כמות מלאי לא יכולה להיות שלילית");
+            }
         }
 
         private async Task<string> SaveImageAsync(IFormFile? imageFile, bool isRequired)

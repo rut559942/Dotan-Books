@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public class OrderTrackingDto
+    public record OrderTrackingDto
     {
         public int Id { get; set; }
         public string? OrderNumber { get; set; }

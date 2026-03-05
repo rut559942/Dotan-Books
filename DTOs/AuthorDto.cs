@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public class AuthorDto
+    public record AuthorDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 
-    public class CreateAuthorDto
+    public record CreateAuthorDto
     {
         public string Name { get; set; } = string.Empty;
     }

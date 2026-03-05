@@ -9,16 +9,16 @@ namespace DotanBooks.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly IGetByCategoriesService _Service;
+        private readonly IGetByCategoriesService _categoriesService;
 
-        public CategoriesController(IGetByCategoriesService Service)
+        public CategoriesController(IGetByCategoriesService categoriesService)
         {
-            _Service = Service;
+            _categoriesService = categoriesService;
         }
         [HttpGet("{categoryId}/books")]
         public async Task<ActionResult<CategoryBooksResult<BookDto>>> GetAllBooks(int categoryId, [FromQuery] int page, [FromQuery]  int pageSize)
         {
-            var result = await _Service.GetAllBook(categoryId, page, pageSize);
+            var result = await _categoriesService.GetAllBook(categoryId, page, pageSize);
             if (result == null || result.Books == null || !result.Books.Items.Any())
             {
                 return NotFound();

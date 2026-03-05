@@ -28,7 +28,7 @@ namespace Service
             {
                 Id = b.Id,
                 Title = b.Title,
-                Summary = b.Summary,
+                Summary = b.Summary ?? string.Empty,
                 ImageUrl = b.ImageUrl
             });
         }

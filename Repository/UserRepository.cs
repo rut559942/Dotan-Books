@@ -45,6 +45,28 @@ namespace Repository
             _context.Customers.Update(customer);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> IsUserBlocked(int id)
+        {
+            return await _context.Customers
+                .Where(c => c.Id == id)
+                .Select(c => c.IsBlocked)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task BlockUser(int id, string reason)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null || customer.IsBlocked)
+            {
+                return;
+            }
+
+            customer.IsBlocked = true;
+            customer.BlockedAtUtc = DateTime.UtcNow;
+            customer.BlockReason = reason;
+            await _context.SaveChangesAsync();
+        }
     }
 }
 

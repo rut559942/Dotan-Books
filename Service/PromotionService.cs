@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DTOs;
 using Entities;
 using Repository;
@@ -13,42 +14,33 @@ namespace Service
     public class PromotionService : IPromotionService
     {
         private readonly IPromotionRepository _promotionRepository;
+        private readonly IMapper _mapper;
 
-        public PromotionService(IPromotionRepository promotionRepository)
+        public PromotionService(IPromotionRepository promotionRepository, IMapper mapper)
         {
             _promotionRepository = promotionRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PromotionDto>> GetAllPromotionsAsync()
         {
             var promos = await _promotionRepository.GetAllAsync();
-
-            return promos.Select(p => new PromotionDto
-            {
-                Id = p.Id,
-                Name = p.Title
-            });
+            return _mapper.Map<IEnumerable<PromotionDto>>(promos);
         }
 
         public async Task<PromotionDto> CreatePromotionAsync(CreatePromotionDto dto)
         {
             if (dto.DiscountedPrice < 0 || dto.DiscountedPrice > 100)
-                throw new ValidationException("אחוז הנחה חייב להיות בין 0 ל-100");
+                throw new UnprocessableEntityException("אחוז הנחה חייב להיות בין 0 ל-100");
 
-            var promotionEntity = new Promotion
-            {
-                Title = dto.Name,
-                DiscountedPrice = dto.DiscountedPrice,
-                EndDate = dto.EndDate
-            };
+            if (dto.EndDate.HasValue && dto.EndDate.Value.Date < DateTime.UtcNow.Date)
+                throw new UnprocessableEntityException("תאריך סיום מבצע לא יכול להיות בעבר");
+
+            var promotionEntity = _mapper.Map<Promotion>(dto);
 
             var createdPromo = await _promotionRepository.CreateAsync(promotionEntity);
 
-            return new PromotionDto
-            {
-                Id = createdPromo.Id,
-                Name = createdPromo.Title
-            };
+            return _mapper.Map<PromotionDto>(createdPromo);
         }
     }
 }

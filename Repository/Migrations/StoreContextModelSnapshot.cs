@@ -116,9 +116,24 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BlockReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("BlockedAtUtc")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsBlocked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -237,6 +252,39 @@ namespace Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Promotions");
+                });
+
+            modelBuilder.Entity("Entities.Rating", b =>
+                {
+                    b.Property<int>("CallId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CallId"));
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("RequestDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CallId");
+
+                    b.HasIndex("Endpoint");
+
+                    b.HasIndex("RequestDateTime");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RATING", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Book", b =>

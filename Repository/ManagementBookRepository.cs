@@ -27,9 +27,10 @@ namespace Repository
             await _context.Books.AddAsync(book);
         }
 
-        public async Task UpdateAsync(Book book)
+        public Task UpdateAsync(Book book)
         {
             _context.Books.Update(book);
+            return Task.CompletedTask;
         }
 
         public async Task SaveChangesAsync()

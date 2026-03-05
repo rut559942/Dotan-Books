@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-     public class UpdateOrCreateBookDto
+    public record UpdateOrCreateBookDto
     {
 
         public string Title { get; set; } = string.Empty;
@@ -21,14 +21,14 @@ namespace DTOs
     }
 
 
-    public class PromotionDto
+    public record PromotionDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty; 
            
     }
 
-    public class ManagementBookDto
+    public record ManagementBookDto
     {
         public IEnumerable<PromotionDto> Promotions { get; set; } = new List<PromotionDto>();
         public IEnumerable<AuthorDto> Author { get; set; } = new List<AuthorDto>();

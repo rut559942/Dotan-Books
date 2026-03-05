@@ -22,6 +22,7 @@ namespace Repository
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         // 2. עיצוב המודל (Fluent API)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,6 +54,14 @@ namespace Repository
                 .HasIndex(c => c.Email)
                 .IsUnique();
 
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.IsBlocked)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.BlockReason)
+                .HasMaxLength(500);
+
             // הגדרת קשר "אחד לרבים" בין לקוח להזמנות
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
@@ -64,6 +73,25 @@ namespace Repository
             modelBuilder.Entity<Order>()
                 .Property(o => o.TotalAmount)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Rating>(entity =>
+            {
+                entity.ToTable("RATING");
+                entity.HasKey(r => r.CallId);
+                entity.Property(r => r.CallId)
+                    .UseIdentityColumn();
+                entity.Property(r => r.RequestDateTime)
+                    .IsRequired();
+                entity.Property(r => r.Endpoint)
+                    .HasMaxLength(500)
+                    .IsRequired();
+                entity.Property(r => r.StatusCode)
+                    .IsRequired();
+
+                entity.HasIndex(r => r.RequestDateTime);
+                entity.HasIndex(r => r.Endpoint);
+                entity.HasIndex(r => r.UserId);
+            });
         }
     }
 }
