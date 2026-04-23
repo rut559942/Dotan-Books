@@ -11,19 +11,24 @@ namespace Repository.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsAdmin",
-                table: "Customers",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.Sql(@"
+IF COL_LENGTH('dbo.Customers', 'IsAdmin') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Customers]
+    ADD [IsAdmin] bit NOT NULL CONSTRAINT [DF_Customers_IsAdmin] DEFAULT (0);
+END
+");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsAdmin",
-                table: "Customers");
+            migrationBuilder.Sql(@"
+IF COL_LENGTH('dbo.Customers', 'IsAdmin') IS NOT NULL
+BEGIN
+    ALTER TABLE [dbo].[Customers] DROP CONSTRAINT IF EXISTS [DF_Customers_IsAdmin];
+    ALTER TABLE [dbo].[Customers] DROP COLUMN [IsAdmin];
+END
+");
         }
     }
 }

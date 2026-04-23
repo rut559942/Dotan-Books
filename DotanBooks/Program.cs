@@ -10,6 +10,9 @@ using NLog.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Data.SqlClient;
+using Service.Caching;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 try
@@ -46,6 +49,21 @@ try
     builder.Services.AddDbContext<StoreContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+    builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("Redis"));
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        var redisHost = builder.Configuration["Redis:Host"] ?? "localhost";
+        var redisPort = builder.Configuration["Redis:Port"] ?? "6379";
+        var redisPassword = builder.Configuration["Redis:Password"];
+
+        var connectionString = string.IsNullOrWhiteSpace(redisPassword)
+            ? $"{redisHost}:{redisPort},abortConnect=false"
+            : $"{redisHost}:{redisPort},password={redisPassword},abortConnect=false";
+
+        options.Configuration = connectionString;
+        options.InstanceName = "DotanBooks:";
+    });
+
     // Add services to the container.
 
     builder.Services.AddControllers();
@@ -54,13 +72,15 @@ try
     builder.Services.AddSwaggerGen();
     builder.Services.AddAutoMapper(_ => { }, typeof(MappingProfiles).Assembly);
 
-    //חיבור ל client
+    var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+        ?? new[] { "http://localhost:4200" };
+
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAngular",
             policy =>
             {
-                policy.WithOrigins("http://localhost:4200")
+                policy.WithOrigins(allowedOrigins)
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
@@ -91,6 +111,30 @@ try
 
     var app = builder.Build();
 
+    // Retry migrations to handle SQL Server warm-up in containerized startup.
+    const int maxMigrationRetries = 10;
+    var migrationDelay = TimeSpan.FromSeconds(5);
+    for (var attempt = 1; attempt <= maxMigrationRetries; attempt++)
+    {
+        try
+        {
+            using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<StoreContext>();
+            dbContext.Database.Migrate();
+            break;
+        }
+        catch (Exception ex) when (ex is SqlException or InvalidOperationException)
+        {
+            logger.Warn(ex, "Database migration attempt {Attempt} failed.", attempt);
+            if (attempt == maxMigrationRetries)
+            {
+                throw;
+            }
+
+            await Task.Delay(migrationDelay);
+        }
+    }
+
     app.UseMiddleware<RatingMiddleware>();
     app.UseMiddleware<ExceptionMiddleware>();//ההזרקה של במידלוור של ה 404 
                                              // Configure the HTTP request pipeline.
@@ -102,7 +146,11 @@ try
         app.UseSwaggerUI(); 
     }
 
-    app.UseHttpsRedirection();
+    var enableHttpsRedirection = builder.Configuration.GetValue("EnableHttpsRedirection", !app.Environment.IsDevelopment());
+    if (enableHttpsRedirection)
+    {
+        app.UseHttpsRedirection();
+    }
 
 
     app.UseStaticFiles(new StaticFileOptions

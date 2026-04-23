@@ -21,9 +21,17 @@ namespace Service
 
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
+            var smtpHost = _config["Email:SmtpHost"] ?? "smtp.gmail.com";
+            var smtpPort = int.TryParse(_config["Email:SmtpPort"], out var parsedPort) ? parsedPort : 587;
+            var senderName = _config["Email:SenderName"] ?? "Dotan Books";
+            var senderAddress = _config["Email:SenderAddress"]
+                ?? throw new InvalidOperationException("Email:SenderAddress is missing from configuration.");
+            var senderPassword = _config["Email:SenderPassword"]
+                ?? throw new InvalidOperationException("Email:SenderPassword is missing from configuration.");
+
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Dotan Books", "dotan.books.customerservice@gmail.com"));
+            emailMessage.From.Add(new MailboxAddress(senderName, senderAddress));
 
             emailMessage.To.Add(new MailboxAddress("", toEmail));
 
@@ -34,10 +42,10 @@ namespace Service
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
                 
-                await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.ConnectAsync(smtpHost, smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
 
                 
-                await client.AuthenticateAsync("dotan.books.customerservice@gmail.com", "lccp wrdi bvct qumy");
+                await client.AuthenticateAsync(senderAddress, senderPassword);
 
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);

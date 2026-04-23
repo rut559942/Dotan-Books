@@ -63,3 +63,95 @@ This testing strategy helps maintain high code quality and prevent regressions.
 - AutoMapper
 - NLog
 - xUnit (Unit and Integration Tests)
+
+## Docker Quick Start
+
+The repository now includes containerization for the current monolith:
+- [Dockerfile](Dockerfile)
+- [docker-compose.yml](docker-compose.yml)
+- [.env.example](.env.example)
+
+### 1. Prepare environment values
+
+Create a new file named `.env` at the solution root and copy values from `.env.example`.
+
+Required variables:
+- `DB_SA_PASSWORD`
+- `REDIS_PASSWORD`
+- `JWT_KEY`
+- `EMAIL_SENDER_ADDRESS`
+- `EMAIL_SENDER_PASSWORD`
+
+### 2. Build and run
+
+From the solution root:
+
+```bash
+docker compose up --build
+```
+
+Services:
+- API: `http://localhost:8080`
+- SQL Server: `localhost:1433`
+- Redis: `localhost:6379`
+
+### 3. Notes for container runtime
+
+- Database migrations run automatically on API startup.
+- Startup retries are enabled to handle SQL Server warm-up.
+- Redis runs with password protection (`requirepass`) and receives its password from `.env`.
+- API Redis connection settings are provided through environment variables in `docker-compose.yml`.
+- HTTPS redirection is disabled in Docker via environment variable (`EnableHttpsRedirection=false`).
+- CORS origins can be controlled with environment variables, for example:
+	- `Cors__AllowedOrigins__0=http://localhost:4200`
+
+### 4. Verify Redis cache behavior
+
+1. Start the stack with Docker Desktop open:
+
+```bash
+docker compose up --build
+```
+
+2. Confirm running containers in Docker Desktop:
+- `dotanbooks-api`
+- `dotanbooks-sqlserver`
+- `dotanbooks-redis`
+
+3. Trigger cached GET endpoints (for example authors/categories/promotions) twice and verify application behavior.
+
+4. Enter the Redis container and inspect keys/TTL:
+
+```bash
+docker exec -it dotanbooks-redis redis-cli -a "$REDIS_PASSWORD"
+```
+
+PowerShell (Windows):
+
+```powershell
+docker exec -it dotanbooks-redis redis-cli -a "$env:REDIS_PASSWORD"
+```
+
+Inside `redis-cli`:
+
+```text
+KEYS *
+TTL authors:all
+GET authors:all
+TTL categories:all
+TTL promotions:all
+```
+
+5. Wait until TTL expires and call the same endpoint again. You should see key recreation after the request.
+
+### 5. Stop and clean
+
+```bash
+docker compose down
+```
+
+To also remove the SQL data volume:
+
+```bash
+docker compose down -v
+```
