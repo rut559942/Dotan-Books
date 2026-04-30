@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using DTOs;
 using Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
     namespace DotanBooks.Controllers
     {
@@ -26,10 +28,24 @@ using Service;
             }
 
             [HttpPost("login")]
+            [AllowAnonymous]
+            [EnableRateLimiting("LoginPolicy")]
             public async Task<ActionResult<CustomerDto>> Login([FromBody] LoginDto loginDto)
             {
                     var result = await _userService.Login(loginDto);
-                    return Ok(result); 
+
+            var cookieOptions = new CookieOptions
+            {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddMinutes(60),
+            Path = "/"
+            };
+
+            Response.Cookies.Append("auth", result.Token, cookieOptions);
+
+            return Ok(result.User);
             }
 
             [HttpPut("{id}")]

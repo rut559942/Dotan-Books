@@ -14,7 +14,8 @@ public class UserServiceUnitTests
     public async Task Register_WhenPasswordIsWeak_ThrowsValidationException()
     {
         var repository = new Mock<IUserRepository>();
-        var sut = new UserService(repository.Object, TestMapperFactory.CreateMapper());
+        var tokenService = new Mock<ITokenService>();
+        var sut = new UserService(repository.Object, TestMapperFactory.CreateMapper(), tokenService.Object);
         var dto = new NewUserDto
         {
             Name = "Test User",
@@ -41,7 +42,8 @@ public class UserServiceUnitTests
                 IsBlocked = true
             });
 
-        var sut = new UserService(repository.Object, TestMapperFactory.CreateMapper());
+        var tokenService = new Mock<ITokenService>();
+        var sut = new UserService(repository.Object, TestMapperFactory.CreateMapper(), tokenService.Object);
         var dto = new LoginDto
         {
             Email = "blocked@dotanbooks.com",

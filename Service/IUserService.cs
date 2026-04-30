@@ -10,7 +10,7 @@ namespace Service
   public interface IUserService
     {
         Task<int> Register(NewUserDto newUserDto);
-        Task<CustomerDto> Login(LoginDto loginDto);
+        Task<AuthResultDto> Login(LoginDto loginDto);
         Task Update(int id, UpdateUserDto updateUserDto);
     }
 }

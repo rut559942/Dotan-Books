@@ -1,4 +1,6 @@
 ﻿using DTOs;
+using DotanBooks.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Entities;
@@ -7,6 +9,7 @@ namespace DotanBooks.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -20,6 +23,7 @@ namespace DotanBooks.Controllers
         }
 
         [HttpPatch("{orderId}/status")]
+        [AdminOnly]
         public async Task<IActionResult> UpdateStatus(int orderId, [FromBody] OrderStatus newStatus)
         {
             await _orderService.UpdateOrderStatusAsync(orderId, newStatus);
@@ -41,6 +45,7 @@ namespace DotanBooks.Controllers
         }
 
         [HttpGet("all-pending")]
+        [AdminOnly]
         public async Task<ActionResult<IEnumerable<OrderTrackingDto>>> GetAllPendingOrders()
         {
             var orders = await _orderService.GetPendingOrdersForAdminAsync();

@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using DotanBooks.Authorization;
 using DotanBooks.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace DotanBooks.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AdminOnly]
     public class ManagementBookController : ControllerBase
     {
         private readonly IManagementBookService _bookService;

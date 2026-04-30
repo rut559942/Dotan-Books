@@ -18,11 +18,13 @@ namespace Service
     {
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
 
-        public UserService(IUserRepository repository, IMapper mapper)
+        public UserService(IUserRepository repository, IMapper mapper, ITokenService tokenService)
         {
             _repository = repository;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         public async Task<int> Register(NewUserDto newUserDto)
@@ -43,7 +45,7 @@ namespace Service
             return await _repository.AddUser(customer);
         }
 
-        public async Task<CustomerDto> Login(LoginDto loginDto)
+        public async Task<AuthResultDto> Login(LoginDto loginDto)
         {
             var user = await _repository.GetUserByEmail(loginDto.Email);
 
@@ -55,10 +57,12 @@ namespace Service
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
                   
                 throw new ValidationException("Invalid email or password.");
-            
 
-            // 3. מיפוי ל-CustomerDto (כדי לא להחזיר את הסיסמה המוצפנת ללקוח)
-            return _mapper.Map<CustomerDto>(user);
+            return new AuthResultDto
+            {
+                Token = _tokenService.GenerateToken(user),
+                User = _mapper.Map<CustomerDto>(user)
+            };
         }
 
         public async Task Update(int id, UpdateUserDto updateUserDto)

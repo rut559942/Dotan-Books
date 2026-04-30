@@ -13,6 +13,8 @@ using System.Text;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Data.SqlClient;
 using Service.Caching;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 try
@@ -44,6 +46,7 @@ try
     builder.Services.AddScoped<IEmailService, EmailService>();
     builder.Services.AddScoped<IRatingService, RatingService>();
     builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+    builder.Services.AddScoped<ITokenService, TokenService>();
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
@@ -82,7 +85,8 @@ try
             {
                 policy.WithOrigins(allowedOrigins)
                       .AllowAnyHeader()
-                      .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
             });
     });
 
@@ -106,6 +110,62 @@ try
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             ClockSkew = TimeSpan.Zero // מבטל את הדיליי המובנה של 5 דקות פקיעת תוקף
+        };
+    });
+
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        {
+            var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+            return RateLimitPartition.GetSlidingWindowLimiter(
+                partitionKey: $"global:{clientIp}",
+                factory: _ => new SlidingWindowRateLimiterOptions
+                {
+                    PermitLimit = 60,
+                    Window = TimeSpan.FromMinutes(1),
+                    SegmentsPerWindow = 6,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0
+                });
+        });
+
+        options.AddPolicy("LoginPolicy", httpContext =>
+        {
+            var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+            return RateLimitPartition.GetSlidingWindowLimiter(
+                partitionKey: $"login:{clientIp}",
+                factory: _ => new SlidingWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1),
+                    SegmentsPerWindow = 6,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0
+                });
+        });
+
+        options.OnRejected = async (context, cancellationToken) =>
+        {
+            var retryAfterSeconds = 10;
+            if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+            {
+                retryAfterSeconds = Math.Max(1, (int)Math.Ceiling(retryAfter.TotalSeconds));
+            }
+
+            context.HttpContext.Response.Headers["Retry-After"] = retryAfterSeconds.ToString();
+
+            if (!context.HttpContext.Response.HasStarted)
+            {
+                context.HttpContext.Response.ContentType = "application/json";
+                await context.HttpContext.Response.WriteAsJsonAsync(
+                    new { message = "יותר מדי בקשות. נסה שוב בעוד מספר שניות." },
+                    cancellationToken: cancellationToken);
+            }
         };
     });
 
@@ -159,8 +219,10 @@ try
     });
 
     app.UseCors("AllowAngular");
+    app.UseRateLimiter();
 
     app.UseMiddleware<BlockedUserMiddleware>();
+    app.UseMiddleware<CookieToAuthHeaderMiddleware>();
 
     app.UseAuthentication();
 
