@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DTOs;
 using Entities;
+using Microsoft.Extensions.Configuration;
 using Repository;
 using Utils.Exceptions;
 
@@ -18,19 +19,25 @@ namespace Service
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IKafkaProducerService _kafkaProducerService;
+        private readonly IConfiguration _configuration;
 
         public OrderService(
             IOrderRepository orderRepository,
             IBookByIdRepository bookRepository,
             IEmailService emailService,
             IUserRepository userRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IKafkaProducerService kafkaProducerService,
+            IConfiguration configuration)
         {
             _orderRepository = orderRepository;
             _bookRepository = bookRepository;
             _emailService = emailService;
             _userRepository = userRepository;
             _mapper = mapper;
+            _kafkaProducerService = kafkaProducerService;
+            _configuration = configuration;
         }
 
         public async Task<string> PlaceOrderAsync(OrderCreateDto dto, int customerId)
@@ -98,13 +105,26 @@ namespace Service
 
             newOrder.TotalAmount = expectedOrderTotal;
             var savedOrder = await _orderRepository.CreateOrderAsync(newOrder);
+         
+            var topicName = _configuration["Kafka:Topic"]
+                ?? throw new InvalidOperationException("Kafka:Topic is missing from configuration.");
+            var orderMessage = new 
+            {
+                    OrderId = savedOrder.Id,
+                    OrderNumber = savedOrder.OrderNumber,
+                    TotalAmount = savedOrder.TotalAmount,
+                    CustomerId = savedOrder.CustomerId,
+                    OrderDate = savedOrder.OrderDate
+            };
+
+            await _kafkaProducerService.ProduceMessageAsync(topicName, orderMessage);
 
             if (string.IsNullOrWhiteSpace(savedOrder.OrderNumber))
             {
                 throw new ConflictException("שגיאה ביצירת מספר הזמנה");
             }
 
-            var user = await _userRepository.GetUserById(customerId);
+        /*    var user = await _userRepository.GetUserById(customerId);
             string emailBody = $@"
                <h3>שלום,</h3>
                <p>הזמנתך שמספרה <b>{savedOrder.OrderNumber}</b> התקבלה בהצלחה!</p>
@@ -116,7 +136,7 @@ namespace Service
             {
                 await _emailService.SendEmailAsync(user.Email, "אישור הזמנה - דוטן ספרים", emailBody);
 
-            }
+            }*/
 
             return savedOrder.OrderNumber!;
         }

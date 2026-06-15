@@ -30,7 +30,7 @@ using Microsoft.AspNetCore.RateLimiting;
             [HttpPost("login")]
             [AllowAnonymous]
             [EnableRateLimiting("LoginPolicy")]
-            public async Task<ActionResult<CustomerDto>> Login([FromBody] LoginDto loginDto)
+            public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginDto loginDto)
             {
                     var result = await _userService.Login(loginDto);
 
@@ -45,7 +45,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
             Response.Cookies.Append("auth", result.Token, cookieOptions);
 
-            return Ok(result.User);
+            return Ok(result);
             }
 
             [HttpPut("{id}")]

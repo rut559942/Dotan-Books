@@ -44,6 +44,7 @@ try
     builder.Services.AddScoped<IManagementBookService, ManagementBookService>();
     builder.Services.AddScoped<IManagementBookRepository, ManagementBookRepository>();
     builder.Services.AddScoped<IEmailService, EmailService>();
+    builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
     builder.Services.AddScoped<IRatingService, RatingService>();
     builder.Services.AddScoped<IRatingRepository, RatingRepository>();
     builder.Services.AddScoped<ITokenService, TokenService>();
@@ -72,7 +73,33 @@ try
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Description = "הזן את הטוקן כאן. שים לב: יש לכתוב את המילה Bearer, לעשות רווח, ואז להדביק את הטוקן.\nלדוגמה: Bearer eyJhbGci..."
+        });
+
+        c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+        {
+            {
+                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                    {
+                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+    });
     builder.Services.AddAutoMapper(_ => { }, typeof(MappingProfiles).Assembly);
 
     var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()

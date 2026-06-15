@@ -155,3 +155,69 @@ To also remove the SQL data volume:
 ```bash
 docker compose down -v
 ```
+
+
+## Kafka Integration Guide
+
+This section explains how to run Kafka locally, start the API and consumer, and verify that order events are produced and consumed.
+
+### 1. Prerequisites
+
+- **Docker Desktop** (Kafka, ZooKeeper, Kafka UI)
+- **.NET 9 SDK** (or higher)
+
+### 2. Start Kafka Infrastructure
+
+From the solution root, run:
+
+```bash
+docker compose up -d
+```
+
+This starts the Kafka-related services defined in `docker-compose.yml`.
+
+### 3. Open Kafka UI
+
+- URL: `http://localhost:8081`
+- Cluster name: `local`
+- Go to **Topics** and open `OrderCreatedTopic` to inspect messages.
+
+### 4. Run the API
+
+In a separate terminal:
+
+```bash
+cd DotanBooks
+dotnet run
+```
+
+Swagger URL:
+
+- `http://localhost:5180/swagger`
+
+### 5. Run the Kafka Consumer
+
+In another terminal:
+
+```bash
+cd OrderLoggerConsumer
+dotnet run
+```
+
+Recommended consumer setting:
+
+- `AutoOffsetReset = AutoOffsetReset.Earliest` (useful for reading historical messages).
+
+### 6. Verification Flow
+
+1. Open Swagger and click **Authorize**.
+2. Enter token in format: `Bearer <your-jwt-token>`.
+3. Send `POST /api/Orders/checkout` with valid `userId` and order details.
+4. Check the consumer terminal for consumed-event logs.
+5. Refresh Kafka UI (`OrderCreatedTopic`) and verify new records appear.
+
+### 7. Troubleshooting
+
+- **Consumer cannot connect to Kafka**: verify `BootstrapServers` is `localhost:9092`.
+- **No messages consumed**: use a unique `GroupId` or reset offsets.
+- **No data in Kafka UI**: confirm producer code publishes to `OrderCreatedTopic` and all Docker containers are running.

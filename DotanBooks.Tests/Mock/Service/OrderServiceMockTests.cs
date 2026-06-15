@@ -1,6 +1,7 @@
 using System.Reflection;
 using DTOs;
 using Entities;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Repository;
 using Service;
@@ -18,6 +19,12 @@ public class OrderServiceMockTests
         var bookRepository = new Mock<IBookByIdRepository>();
         var emailService = new Mock<IEmailService>();
         var userRepository = new Mock<IUserRepository>();
+        var kafkaProducerService = new Mock<IKafkaProducerService>();
+        var configuration = new Mock<IConfiguration>();
+
+        configuration
+            .Setup(c => c["Kafka:Topic"])
+            .Returns("orders-topic");
 
         bookRepository
             .Setup(r => r.GetBookById(11))
@@ -34,7 +41,9 @@ public class OrderServiceMockTests
             bookRepository.Object,
             emailService.Object,
             userRepository.Object,
-            TestMapperFactory.CreateMapper());
+            TestMapperFactory.CreateMapper(),
+            kafkaProducerService.Object,
+            configuration.Object);
 
         var dto = new OrderCreateDto
         {
@@ -67,6 +76,12 @@ public class OrderServiceMockTests
         var bookRepository = new Mock<IBookByIdRepository>();
         var emailService = new Mock<IEmailService>();
         var userRepository = new Mock<IUserRepository>();
+        var kafkaProducerService = new Mock<IKafkaProducerService>();
+        var configuration = new Mock<IConfiguration>();
+
+        configuration
+            .Setup(c => c["Kafka:Topic"])
+            .Returns("orders-topic");
 
         bookRepository
             .Setup(r => r.GetBookById(20))
@@ -102,7 +117,9 @@ public class OrderServiceMockTests
             bookRepository.Object,
             emailService.Object,
             userRepository.Object,
-            TestMapperFactory.CreateMapper());
+            TestMapperFactory.CreateMapper(),
+            kafkaProducerService.Object,
+            configuration.Object);
 
         var dto = new OrderCreateDto
         {
@@ -126,6 +143,7 @@ public class OrderServiceMockTests
         Assert.Equal("DS999999", orderNumber);
         bookRepository.Verify(r => r.UpdateBook(It.Is<Book>(b => b.Id == 20 && b.StockQuantity == 8)), Times.Once);
         orderRepository.Verify(r => r.CreateOrderAsync(It.IsAny<Order>()), Times.Once);
+        kafkaProducerService.Verify(r => r.ProduceMessageAsync("orders-topic", It.IsAny<Order>()), Times.Once);
         emailService.Verify(r => r.SendEmailAsync("user@dotanbooks.com", It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         userRepository.Verify(r => r.BlockUser(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
     }
