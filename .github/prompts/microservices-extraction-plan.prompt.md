@@ -1,89 +1,104 @@
 ---
-description: Create a bilingual microservices extraction plan for the DotanBooks monolith.
+description: צור תוכנית קונקרטית לפיצול המונוליט DotanBooks למיקרוסרביסים לפי הארכיטקטורה הקיימת.
 ---
 
-# Microservices Extraction Plan — DotanBooks
+# תוכנית חילוץ למיקרוסרביסים - DotanBooks
 
-> Planning only. Do not implement code, create services, or write migration scripts.
->
-> The goal is to help the team think through how to split the current DotanBooks monolith into microservices.
+> תכנון בלבד. אין לממש קוד בפועל.
+> הפלט צריך להיות מסמך ברור שמגדיר איך מפצלים את DotanBooks למיקרוסרביסים.
 
-## Output Format
+## מטרה
 
-Produce the response as a bilingual two-column table in Markdown.
+להפיק תוכנית ארכיטקטונית לפיצול המונוליט הקיים של DotanBooks, לפי מבנה הפרויקט בפועל:
 
-| עברית | English |
-|-------|---------|
+- שכבת API: Controllers ו-Middlewares בתוך `DotanBooks/`
+- שכבת שירותים: לוגיקה עסקית בתוך `Service/`
+- שכבת רפוזיטוריז: גישה לנתונים בתוך `Repository/`
+- חוזים: DTOs בתוך `DTOs/`
+- מודל דומיין: Entities בתוך `Entitiys/`
 
-Each major section must appear in both languages side by side.
+## כללי פלט
 
-## Scope for DotanBooks
+- הפק מסמך Markdown יחיד.
+- שמור על תכנון מעשי, אבל ללא מימוש קוד.
+- השתמש בדיוק בסדר הסעיפים שמופיע בהמשך.
+- השתמש בשמות אמיתיים מהריפו, לא בדוגמאות כלליות.
 
-Use the current DotanBooks architecture as the source of truth.
-Base the analysis on the existing controllers, services, repositories, DTOs, and entities in the repository.
+## Bounded Contexts מוצעים
 
-### Likely domain areas
+השתמש בטבלה הזו כבסיס וחדד אותה רק אם יש הצדקה ברורה.
 
-- Users, authentication, JWT, blocked users, and token management
-- Books, categories, authors, and catalog browsing
-- Orders and checkout flow
-- Promotions and discounts
-- Ratings and traffic-related behavior
-- Search and autocomplete
-- Management/backoffice book operations
-- Supporting infrastructure such as Kafka, email, Redis, logging, and cache usage
+| שירות | ישויות עיקריות | Controllers נוכחיים | אחריות |
+|-------|-----------------|----------------------|--------|
+| **IdentityService** | Customer | UsersController | הרשמה, התחברות, JWT, חסימת משתמשים |
+| **CatalogService** | Book, Author, Category | BookPageController, SearchBooksController, CategoriesController, GetCategoriesController, AuthorsController, ManagementBookController | קטלוג ספרים, דפדוף, סינון, חיפוש וניהול קטלוג (כולל write-side בשלב הראשון) |
+| **OrderService** | Order, OrderItem, OrderStatus | OrdersController | Checkout, מחזור חיי הזמנה, ניהול פריטי הזמנה וסטטוסים, ופרסום אירועים דרך Kafka Producer |
+| **PromotionService** | Promotion | PromotionsController | שירות עצמאי אם המורכבות גבוהה; אחרת מודול Promotions בתוך OrderService |
+| **TelemetryService (אופציונלי)** | Rating | ללא Controller ייעודי (middleware-driven) | שירות עצמאי רק אם קיימת לוגיקה עסקית עצמאית; אחרת להשאיר כחלק מה-API/observability |
 
-## Required Sections
+## שלבי החילוץ
 
-1. Bounded contexts
-2. Suggested service boundaries
-3. Entity and controller ownership mapping
-4. Extraction phases
-5. API contract strategy
-6. Database and migration strategy
-7. Async communication strategy
-8. Testing strategy
-9. Cutover and strangler pattern notes
-10. Pre-merge checklist
-11. Operational recommendations
+1. **זיהוי גבולות**
+   - מפה מלאה של Controller -> Service -> Repository -> Entity.
+   - איתור תלות בין תחומים וטבלאות משותפות.
+2. **הקמת שלד שירותים**
+   - לכל שירות: `API`, `Application`, `Domain`, `Infrastructure`, `Contracts`, `Tests`.
+3. **הגדרת חוזי API**
+   - חוזים גרסתיים ב-OpenAPI (למשל `/api/v1/orders`).
+   - בעלות ברורה על DTOs לכל שירות.
+4. **אסטרטגיית פיצול DB**
+   - מעבר מ-`StoreContext` משותף ל-DbContext ייעודי לכל שירות.
+   - תכנון סדר מיגרציות ותאימות מעבר.
+5. **העברת לוגיקה עסקית**
+   - העברת הכללים העסקיים מ-`Service/` לשירות היעד.
+   - שמירת ה-Controllers הקיימים כ-facade זמני עד cutover.
+6. **מודל תקשורת**
+   - REST סינכרוני לזרימות שדורשות תשובה מיידית.
+   - Kafka לתקשורת אסינכרונית בין שירותים (למשל `OrderCreated`), כאשר ה-Producer נמצא תחת OrderService.
+7. **אסטרטגיית בדיקות**
+   - שמירת קונבנציות xUnit + Moq + AAA.
+   - הוספת contract tests ל-API ולאירועים.
+8. **Cutover הדרגתי**
+   - Strangler pattern מאחורי Gateway/ניתוב.
+   - מעבר לפי bounded context והסרה הדרגתית מהמונוליט.
 
-## Instructions for the Model
+## הנחיות בעלות על נתונים
 
-| Guideline | What it means |
-|-----------|---------------|
-| Keep the document planning-only. | Do not implement code or scaffolding. |
-| Prefer business boundaries. | Split by responsibility, not by file structure. |
-| Explain ownership decisions. | Say why a service owns an entity or controller. |
-| Mention tradeoffs. | Call out uncertain boundaries clearly. |
-| Use repo-specific examples. | Refer to real controllers like UsersController and OrdersController. |
-| Align with the current stack. | Keep ASP.NET Core, EF Core, AutoMapper, NLog, Redis, and Kafka in mind. |
+- `IdentityService` בעלות על נתוני משתמש/אימות.
+- `CatalogService` בעלות על נתוני קטלוג (`Book`, `Author`, `Category`) גם לקריאה וגם לכתיבה בשלב הראשון.
+- `OrderService` בעלות על אגרגט הזמנה (`Order`, `OrderItem`, `OrderStatus`) ועל פרסום אירועים אסינכרוניים דרך Kafka Producer.
+- `PromotionService` בעלות על נתוני מבצעים אם מופרד; אם לא, הבעלות עוברת למודול Promotions תחת `OrderService`.
+- `TelemetryService` (אם מופרד) בעלות על נתוני rating/traffic; אחרת נשאר בתחום ה-API/observability.
 
-## Suggested Bilingual Table Structure
+כשיש כיום שיתוף נתונים, הגדירו בעלים יחיד וחשפו מידע דרך API או Events בלבד.
 
-For each topic, write the Hebrew explanation in the left column and the English explanation in the right column.
+## הערות אינטגרציה ופלטפורמה
 
-### Example rows
+- שמור JWT לאימות חיצוני.
+- לתקשורת פנימית בין שירותים השתמש ב-mTLS או מנגנון שקול.
+- שמור אסטרטגיית לוגים מרכזית (NLog/OpenTelemetry).
+- שמור Redis במקומות עם עומס קריאה גבוה.
+- השאר את Kafka כעמוד שדרה אסינכרוני, כאשר Producer מנוהל מתוך `OrderService` ו-Consumer בפרויקט `OrderLoggerConsumer/`.
 
-| עברית | English |
-|-------|---------|
-| שירות המשתמשים יכיל הרשמה, התחברות, JWT וחסימת משתמשים. | The User service should own registration, login, JWT, and blocked-user handling. |
-| שירות ההזמנות ינהל checkout, סטטוס הזמנה ואירועי Kafka. | The Order service should manage checkout, order status, and Kafka events. |
+## Checklist לפני מיזוג
 
-## Checklist to Include
+- [ ] גבול השירות ברור ומנומק.
+- [ ] חוזה API גרסתית ומתועד.
+- [ ] בעלות נתונים ונתיב מיגרציה מוגדרים.
+- [ ] חוזי אירועים ו-policy של retry/DLQ מוגדרים, כולל אחריות Kafka Producer תחת OrderService.
+- [ ] Unit, Integration ו-Contract tests כלולים.
+- [ ] Health ו-Readiness endpoints מוגדרים.
+- [ ] אסטרטגיית CI/CD ו-Docker image מוגדרת.
+- [ ] מודל אבטחה (JWT + trust פנימי) מתועד.
 
-Use this checklist at the end of the document:
+## המלצות תפעוליות
 
-- [ ] כל שירות מוגדר לפי bounded context ברור
-- [ ] ownership ל-entities ול-controllers מופיע במפורש
-- [ ] contract API מתואר ברמת high level
-- [ ] DB ownership לכל שירות מוסבר
-- [ ] תקשורת סינכרונית וא-סינכרונית מוסברת
-- [ ] טסטים ו-cutover מתוארים
-- [ ] המלצות תפעוליות מופיעות בסוף
+- פריסה הדרגתית עם Blue/Green או Canary.
+- תצפיתיות מלאה: logs, metrics, traces.
+- SLOs והתראות לכל שירות לפני cutover מלא.
 
-## Tone
+## מגבלות חשובות
 
-Use a practical architecture-review tone.
-
-Be direct, concise, and specific.
-The document should feel like an internal planning artifact for a team that already owns the DotanBooks codebase.
+- אין לבצע Big Bang Rewrite.
+- אין להשאיר כתיבה ישירה ל-DB משותף אחרי חילוץ.
+- אין להגדיר גבולות רק לפי תיקיות; יש להגדיר לפי בעלות עסקית וקצב שינוי.
