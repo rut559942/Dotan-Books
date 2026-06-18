@@ -7,6 +7,7 @@ services:
     volumes:
       - redis_data:/data
 
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
     ports:
@@ -39,6 +40,14 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
 
 volumes:
   redis_data:
