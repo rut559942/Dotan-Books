@@ -31,6 +31,8 @@ try
     builder.Services.AddScoped<ISearchBookRepository, SearchBookRepository>();
     builder.Services.AddScoped<IBookByIdService, BookByIdService>();
     builder.Services.AddScoped<IBookByIdRepository, BookByIdRepository>();
+    builder.Services.AddScoped<IBooksService, BooksService>();
+    builder.Services.AddScoped<IBooksRepository, BooksRepository>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
     builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
@@ -48,6 +50,8 @@ try
     builder.Services.AddScoped<IRatingService, RatingService>();
     builder.Services.AddScoped<IRatingRepository, RatingRepository>();
     builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddHttpClient(); 
+    builder.Services.AddCors(o => o.AddDefaultPolicy( p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 
     builder.Services.AddDbContext<StoreContext>(options =>
